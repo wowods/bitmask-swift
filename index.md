@@ -22,7 +22,7 @@ There are four common bitwise operators that we'll be using:
 Be careful, since bitwise operator for `AND` and `OR` is quite similar to its logical operator with the same name `AND (&&)` and `OR (||)`,  the difference is logical operator only receive `Bool` as their input. 
 
 Those bitwise operators will have result:
-[ TODO: add images and tables here ]
+![Bitwise operators](/assets/bitwise-operators.png)
 For further information about bitwise operator, you could check [Swift Docs about Advanced Operators](https://docs.swift.org/swift-book/LanguageGuide/AdvancedOperators.html).
 
 Let's do some example on these operators :
@@ -39,7 +39,7 @@ print(firstbit | secondbit) // 0b 0000 1111 -> 15
 print(firstbit ^ secondbit) // 0b 0000 1110 -> 14
 ```
 
-There are also bitwise operators called `Left-shift operator (<<)` and `right-shift operator (>>)` where they shifting all the bits in a number to the left or right by a certain number (with some rules applied). On this occasion, I will only talk about shifting unsigned integer value, since it's much more simpler and that what we need for now. If you are interesting to learn more about it you could head to [ TODO: Swift Docs link here ].
+There are also bitwise operators called `Left-shift operator (<<)` and `right-shift operator (>>)` where they shifting all the bits in a number to the left or right by a certain number (with some rules applied). On this occasion, I will only talk about shifting unsigned integer value, since it's much more simpler and that what we need for now. If you are interesting to learn more about it you could head to [Swift Docs about Advanced Operators](https://docs.swift.org/swift-book/LanguageGuide/AdvancedOperators.html#ID34).
 
 Shift operator will move any bits to left or right and then fill the gap that it leaves behind with zero. If any value is moving outside the boundary, it just being discarded. For example: 
 
@@ -77,7 +77,7 @@ struct AccountRoles: OptionSet {
 }
 ```
 
-The groups just merging all the values that they represent. [ TODO: double check these values]
+The groups just merging all the values that they represent.
 
 ```swift
 print(AccountRoles.users.rawValue)  //  7 aka 0b 0000 0111
@@ -109,16 +109,16 @@ Calling `.rawValue` every time we want to modify the data is quite exhausting, b
 `SetAlgebra` is a mathematical set operation such as intersection, union, etc. By using `SetAlgebra` function, it could increase our code readability since it's much easier to understand what modification that is being applied to the data compared by using bitwise operator.
 
 Below are some of `SetAlgebra` functions with its illustration and also its equivalent result using bitwise operator.
-[ TODO: insert image here ]
+![Set Algebra example](/assets/setalgebra.png)
 
-You could imagine that each `SetAlgebra` function is doing some bitwise operator with some rules on it. I made some examples of the function using bitwise operator that you could check over here. [ TODO: insert link to GitHub file ]
+You could imagine that each `SetAlgebra` function is doing some bitwise operator with some rules on it. I made some examples of the function using bitwise operator that you could check over [here](https://github.com/wowods/bitmask-swift/blob/master/Bitmask.playground/Pages/0.%20SetAlgebra%20with%20Bitwise%20Operator.xcplaygroundpage).
 
 You could combine `SetAlgebra` function with bitwise operator for more complex operation that you need. In the next part, I will make some examples of implementation for what already we learn before.
 
 
 ## Example
 
-I am referencing Wikipedia [ TODO: add link to Wikipedia ] for some common function on bit masking and will try to make an example with our `AccountRole` that has been declared above.
+I am referencing [Wikipedia](https://en.wikipedia.org/wiki/Mask_(computing)#Common_bitmask_functions) for some common function on bit masking and will try to make an example with our `AccountRole` that has been declared above.
 
 ### Masking bit to `1`
 
@@ -158,8 +158,7 @@ let adminNowPremium = AccountRoles(rawValue: adminNowPremiumValue)
 //  0000 1011 <-- result = adminNowPremium
 ```
 
-You could use this method to mask multiple values at once. 
-[ TODO: link to playground page ]
+You could use this method to mask multiple values at once.
 
 ### Masking bit to `0`
 
@@ -185,10 +184,25 @@ So, if you get this task:
 You could do it by using `AND` operator with `AccountRoles.admins`. But remember, we need value `0` on the bits that we want to turn-off, so we need to invert the values of `AccountRoles.admins` first, before doing the operation.
 
 ```swift
-// TODO: example here
+let hasDeveloperRole: AccountRoles = [.normalUser, .devUser, .adminUser] // 0010 00101
+
+// First we need to invert the value for all developer roles
+let notDevsRawValue = ~AccountRoles.devs.rawValue
+let notDevsRoles = AccountRoles(rawValue: notDevsRawValue)
+
+// Then use `AND` operator to turn-off the value
+let rawValue: UInt8 = hasDeveloperRole.rawValue & notDevsRoles.rawValue
+let hasNoDeveloperRole = AccountRoles(rawValue: rawValue)
+
+// or you could use `.intersection()` from SetAlgebra
+// let hasNoDeveloperRole = hasDeveloperRole.intersection(notDevsRole)
+
+//  0010 0101 <-- hasDeveloperRole
+//  1101 1011 <-- notDevsRoles
+//  ---------- AND
+//  0000 0001 <-- result = hasNoDeveloperRole
 ```
 
-Here's the link to playground page for the example. [ TODO: link to playground page ]
 
 ### Querying bit value
 
@@ -215,11 +229,23 @@ So if you get a task to check any value like this,
 Just use `AND` operator and check if the results are all zero or not.
 
 ```swift
-// TODO: example here
+let someRandomUser: AccountRoles = [.admin, .premiumUser]
+
+// Just using operator `AND`
+let isUserRawValue = someRandomUser.rawValue & AccountRoles.users.rawValue
+// If you want to convert it to boolean, just check its value
+let isUser = isUserRawValue > 0
+
+// or you could use `.intersection()` and `.isEmpty` from SetAlgebra
+// !someRandomUser.intersection(.users).isEmpty
+
+//  0000 1010 <-- someRandomUser
+//  0000 0111 <-- .users
+//  ---------- AND
+//  0000 0010 <-- result = isUserRawValue which has value > 0
 ```
 
-Or alternatively, you could use `SetAlgebra` function `.intersection` combine with `.isEmpty`, to get the same result.
-[ TODO: link to playground page ]
+Alternatively, you could use `SetAlgebra` function `.intersection` combine with `.isEmpty`, to get the same result.
 
 ### Toggling bit value
 
@@ -235,9 +261,30 @@ Toggling bit value means to revert the value from `0` to `1` and vice versa. Thi
 ```
 
 So, imagine that you are in this condition,
-> TODO example case
+> Your boss, Squidward, is kinda annoyed by his neighbour today. So he declared today is Opposite Day.
+So, please toggle the value for `.premiumUser` and `.superAdmin`.
 
-[ TODO: explanation ]
+We could solve it like this,
+
+```swift
+let randomAccount: AccountRoles = [.premiumUser, .devUser, .devAdmin]
+
+//  First we set which value that we want to toggle.
+let toggleRoles: AccountRoles = [.premiumUser, .superAdmin]
+
+// Then just use `XOR` operator.
+let toggledRawValue = randomAccount.rawValue ^ toggleRoles.rawValue
+let toggledRandomAccount = AccountRoles(rawValue: toggledRawValue)
+
+// Now `toggledRandomAccount` doesn't have access to premium user but has role as super admin
+// while keeping its role as developer.
+
+//  0010 0110 <-- randomAccount
+//  0001 0010 <-- toggleRoles
+//  ---------- XOR
+//  0011 0100 <-- result = toggledRawValue
+```
+
 
 ## Conclusion
 
@@ -245,6 +292,6 @@ So, in Swift we could make data for bitmask operation by using `OptionSet` that 
 
 Bit masking could be useful when you want to turning on or off some value on `OptionSet` and also can be used for checking the status of specific data on it.
 
-If you want to check the example or try it by yourself, you could check this GitHub repository that contains Swift Playground for it.
+If you want to check the example or try it by yourself, you could check this [GitHub repository](https://github.com/wowods/bitmask-swift) that contains Swift Playground for it.
 
 ***

@@ -26,4 +26,4 @@ titles:
 key: page-about
 ---
 
-You could check the example for this tutorial on GitHub repository over here.
+You could check the example for this tutorial on GitHub repository over [here](https://github.com/wowods/bitmask-swift).
