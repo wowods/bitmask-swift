@@ -1,5 +1,5 @@
 # Bitmask in Swift
-This is playground that explain about bit masking using Swift. You could see more detail on the Github page for this repo.
+This is playground that explain about bit masking using Swift. You could see more detail on the [Github page](https://wowods.github.io/bitmask-swift/) for this repo.
 The topic is include :
 - Bitwise operator
 - `OptionSet`
