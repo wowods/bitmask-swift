@@ -295,3 +295,10 @@ Bit masking could be useful when you want to turning on or off some value on `Op
 If you want to check the example or try it by yourself, you could check this [GitHub repository](https://github.com/wowods/bitmask-swift) that contains Swift Playground for it.
 
 ***
+
+## References
+
+1. [https://en.wikipedia.org/wiki/Mask_(computing)](https://en.wikipedia.org/wiki/Mask_(computing))
+2. [https://docs.swift.org/swift-book/LanguageGuide/AdvancedOperators.html](https://docs.swift.org/swift-book/LanguageGuide/AdvancedOperators.html)
+3. [https://developer.apple.com/documentation/swift/optionset](https://developer.apple.com/documentation/swift/optionset)
+4. [https://developer.apple.com/documentation/swift/setalgebra](https://developer.apple.com/documentation/swift/setalgebra)
