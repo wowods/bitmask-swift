@@ -1,5 +1,6 @@
-*This site is build using TeXt Theme with some modification to increase codeblock font size and add TOC on home page*
+Link to pages: [https://wowods.github.io/bitmask-swift/](https://wowods.github.io/bitmask-swift/)
 
+*This site is build using TeXt Theme with some modification to increase codeblock font size and add TOC on home page*
 
 # [TeXt Theme](https://github.com/kitian616/jekyll-TeXt-theme)
 
